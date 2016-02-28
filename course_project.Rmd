@@ -52,38 +52,37 @@ Since number of cylinders seems to be not too reliable (very low confidence leve
 fit6 <- lm(mpg ~ am + I(wt - mean(wt)) + I(hp - mean(hp)), cars)
 round(summary(fit6)$coef, 3)
 ```
-Diagnostics (Figure 3 in Appendix) of created model don't seem to have any particularly bad data points, some of them (17, 18 and 20) have maybe a bit high influence, but removing them would actually even more diminish influence of transmission type on MPG. 
+Diagnostics (Figure 3 in Appendix) of created model don't seem to have any particularly bad data points, some of them (17, 18 and 20) have maybe a bit high influence, but removing them would actually even more diminish influence of transmission type on MPG.
 ```{r, echo = FALSE}
 fit7 <- lm(mpg ~ am + I(wt - mean(wt)) + I(hp - mean(hp)), cars[-c(17, 18, 20),])
 round(summary(fit7)$coef, 3)
 ```
-Removing those records is not necessary, since even with them included, we are confident that:  
+Removing those records is not necessary (it's an overkill anyway), since even with them included, we are confident that:  
  * increase of wheight by 1000 lbs of average power car equiped with an automatic transmission, results `r abs(round(fit6$coef, 3)[3])` decrease in MPG;  
  * increase of 1 hp of average weight car equiped with an automatic transmission, results `r abs(round(fit6$coef, 3)[4])` decrease in MPG.    
-It might look that changing transmission type of average wheight, average power car from automatic to manual results `r abs(round(fit6$coef, 3)[2])` increase of MPG, however 95% confidence interval of this coefficient is from `r round(confint(fit6)[2,1], 3)` to `r round(confint(fit6)[2,2], 3)`, and as it contains 0, we have to conclude that such result is unreliable (we are only ~86% confident). Thus we can't confirm that transmission type has impact on MPG and, of course, we can't quantify it.
+It might look that changing transmission type of average wheight, average power car from automatic to manual results `r abs(round(fit6$coef, 3)[2])` increase of MPG, however 95% confidence interval of this coefficient is from `r round(confint(fit6)[2,1], 3)` to `r round(confint(fit6)[2,2], 3)` and, as it contains 0, we have to conclude that such result is unreliable (we are only ~86% confident). Thus we can't confirm that transmission type has impact on MPG and, of course, we can't quantify it.
 
 
 # Appendix
-### Figure 1: Residuals Normality
+## Figure 1: Residuals Normality
 ```{r, echo = FALSE}
 plot(fit1, which = 2)
 ```
-
-
-### Figure 2: Correlation Chart of Extended Model  
+.
+  
+## Figure 2: Correlation Chart of Extended Model  
 ```{r, echo = FALSE, cache = TRUE}
 ggpairs(cars[, c('mpg', 'am', 'wt', 'cyl', 'hp')],
         upper = list(continuous = "cor", combo = "facetdensity"),
-        lower = list(continuous = "smooth", combo = "box", discrete = "ratio")) +
-theme(plot.title = element_text(face="bold"))
+        lower = list(continuous = "smooth", combo = "box", discrete = "ratio"))
 ```
-
+.
   
-### Figure 2: Diagnostics of Final Model  
+## Figure 3: Diagnostics of Final Model  
 ```{r, echo = FALSE}
-par(mfrow = c(2,3))
-plot(fit6, which = 1:6)
+par(mfrow = c(2,2))
+plot(fit6, which = c(1:3, 5))
 ```
 
 
-The .Rmd file can be found here 
+R Markdown file reproducing this report can be found here https://github.com/T-StrawClown/RegressionModels/blob/master/course_project.Rmd
