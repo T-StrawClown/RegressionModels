@@ -29,6 +29,10 @@ points(cars_m$wt, cars_m$mpg, bg = "forestgreen", pch = 21, cex = 2)
 abline(lm(mpg ~ wt, cars_a), lw = 2, col = "darkblue")
 abline(lm(mpg ~ wt, cars_m), lw = 2, col = "forestgreen")
 abline(lm(mpg ~ wt, cars), lw = 2, col = "red", lty = 3)
+legend("topright",
+       legend = c("Automatic", "Manual", "All"), 
+       lty = c(1, 1, 3),
+       col = c("darkblue", "forestgreen", "red"))
 
 x <- mutate(mtcars, mpg = mpg, cyl = as.factor(cyl), disp = disp, hp = hp, wt = wt, am = as.factor(am)) %>%
         select(mpg, cyl, disp, hp, wt, am)
@@ -36,7 +40,7 @@ x <- mutate(mtcars, mpg = mpg, cyl = as.factor(cyl), disp = disp, hp = hp, wt = 
 g<-ggpairs(cars[, c('mpg', 'am', 'wt')], 
         upper = list(continuous = "cor"), 
         lower = list(continuous = "smooth", combo = "box", discrete = "ratio"))
-g<- g + ggplot2::theme(plot.title = "The Title")
+g<- g + ggplot2::labs(title = "The Title")
 g<- g + ggplot2::theme(plot.title = ggplot2::element_text(face="bold"))
 
 
